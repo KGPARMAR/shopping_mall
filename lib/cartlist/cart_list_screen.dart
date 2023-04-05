@@ -51,14 +51,6 @@ class _ProductListScreenState extends State<CartListScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
-        actions: [
-          GestureDetector(
-            onTap: () async {},
-            child: Icon(
-              Icons.work_outline_sharp,
-            ),
-          )
-        ],
       ),
       body: GridView.builder(
         itemCount: productsList.length,
