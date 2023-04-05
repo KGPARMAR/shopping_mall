@@ -12,14 +12,12 @@
 import 'dart:convert';
 
 import 'package:http/http.dart';
-import 'package:online_shopping/product_list_model.dart';
+import 'package:online_shopping/model/product_list_model.dart';
 
-class UserRepository {
-  String userUrl = 'http://205.134.254.135/~mobile/MtProject/public/api/product_list.php';
-
-  Future<List<Data>> getUsers() async {
+class ProductRepository {
+  Future<List<Data>> getProducts({int page = 1, int perPageItemLimit = 5}) async {
     Response response = await get(
-      Uri.parse(userUrl),
+      Uri.parse('http://205.134.254.135/~mobile/MtProject/public/api/product_list.php?page=${page}&perPage=${perPageItemLimit}'),
       headers: {
         'token': 'eyJhdWQiOiI1IiwianRpIjoiMDg4MmFiYjlmNGU1MjIyY2MyNjc4Y2FiYTQwOGY2MjU4Yzk5YTllN2ZkYzI0NWQ4NDMxMTQ4ZWMz',
       },

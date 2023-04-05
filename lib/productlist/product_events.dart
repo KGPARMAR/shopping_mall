@@ -14,11 +14,13 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
 @immutable
-abstract class UserEvent extends Equatable {
-  const UserEvent();
+abstract class ProductEvent extends Equatable {
+  const ProductEvent();
 }
 
-class LoadUserEvent extends UserEvent {
+class LoadProductEvent extends ProductEvent {
+  LoadProductEvent(this.page);
+  int? page;
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [page];
 }

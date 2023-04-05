@@ -12,26 +12,30 @@
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:online_shopping/product_list_model.dart';
+import 'package:online_shopping/model/product_list_model.dart';
 
 @immutable
-abstract class UserState extends Equatable {}
+abstract class ProductState extends Equatable {}
 
-class UserLoadingState extends UserState {
+class ProductLoadingState extends ProductState {
   @override
   List<Object?> get props => [];
 }
 
-class UserLoadedState extends UserState {
-  final List<Data> users;
-  UserLoadedState(this.users);
+class ProductLoadedState extends ProductState {
+  final List<Data> products;
+
+  ProductLoadedState(this.products);
+
   @override
-  List<Object?> get props => [users];
+  List<Object?> get props => [products];
 }
 
-class UserErrorState extends UserState {
+class ProductErrorState extends ProductState {
   final String error;
-  UserErrorState(this.error);
+
+  ProductErrorState(this.error);
+
   @override
   List<Object?> get props => [error];
 }
