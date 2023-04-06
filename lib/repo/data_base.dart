@@ -32,8 +32,8 @@ class DataBase {
   Future<int> insertProducts(List<Data> products) async {
     int result = 0;
     final Database db = await initializedDB();
-    for (var planet in products) {
-      result = await db.insert('products', planet.toJson(), conflictAlgorithm: ConflictAlgorithm.replace);
+    for (var product in products) {
+      result = await db.insert('products', product.toJson(), conflictAlgorithm: ConflictAlgorithm.replace);
     }
 
     return result;

@@ -26,8 +26,11 @@ class CartListScreen extends StatefulWidget {
 class _ProductListScreenState extends State<CartListScreen> {
   DataBase handler = DataBase();
 
-  Future<int> addPlanets(Data productsList) async {
-    return await handler.insertProducts([productsList]);
+  double totalPrice = 0.0;
+
+  Future<void> deleteProducts(Data productsList) async {
+    await handler.deleteProduct(productsList.id!);
+    getCartList();
   }
 
   @override
@@ -42,6 +45,7 @@ class _ProductListScreenState extends State<CartListScreen> {
     productsList = await handler.retrieveProducts();
     productsList.forEach((element) {
       print(element.title);
+      totalPrice += double.parse('${element.price}');
     });
     setState(() {});
   }
@@ -49,67 +53,129 @@ class _ProductListScreenState extends State<CartListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: GridView.builder(
-        itemCount: productsList.length,
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          crossAxisSpacing: 16,
+        appBar: AppBar(
+          title: Text(widget.title),
         ),
-        scrollDirection: Axis.vertical,
-        itemBuilder: (_, index) {
-          return Container(
-            height: 250.0,
-            width: MediaQuery.of(context).size.width / 2,
-            child: Card(
-              child: Stack(
-                children: [
-                  Container(
-                    height: 200.0,
-                    alignment: Alignment.center,
-                    child: Image.network(
-                      productsList[index].featuredImage.toString(),
-                      fit: BoxFit.contain,
-                      alignment: Alignment.center,
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Container(
-                      height: 50.0,
-                      color: Colors.white,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: Text(
-                              '${productsList[index].title}  ${productsList[index].price}',
-                              style: const TextStyle(
-                                color: Colors.black,
-                              ),
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                            ),
+        body: Stack(
+          children: [
+            Container(
+              margin: EdgeInsets.only(bottom: 50.0),
+              child: ListView.builder(
+                itemCount: productsList.length,
+                scrollDirection: Axis.vertical,
+                itemBuilder: (_, index) {
+                  return Card(
+                    child: Row(
+                      children: [
+                        Container(
+                          height: 150.0,
+                          width: 150.0,
+                          alignment: Alignment.center,
+                          child: Image.network(
+                            productsList[index].featuredImage.toString(),
+                            fit: BoxFit.contain,
+                            alignment: Alignment.center,
                           ),
-                          GestureDetector(
-                            onTap: () {
-                              var temp = addPlanets(productsList[index]);
-                              print(temp);
-                            },
-                            child: Icon(Icons.work_outline_sharp),
-                          )
-                        ],
-                      ),
+                        ),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                '${productsList[index].title}',
+                                style: const TextStyle(
+                                  color: Colors.black,
+                                ),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      'Price',
+                                      style: const TextStyle(
+                                        color: Colors.black,
+                                      ),
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Text(
+                                      '\$ ${productsList[index].price}',
+                                      style: const TextStyle(
+                                        color: Colors.black,
+                                      ),
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      'Quantity',
+                                      style: const TextStyle(
+                                        color: Colors.black,
+                                      ),
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Text(
+                                      '1',
+                                      style: const TextStyle(
+                                        color: Colors.black,
+                                      ),
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  deleteProducts(productsList[index]);
+                                  const snackBar = SnackBar(
+                                    content: Text('Item delete successfully!'),
+                                  );
+                                  ScaffoldMessenger.of(context).showSnackBar(snackBar);;
+                                },
+                                child: Icon(Icons.delete),
+                              )
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                ],
+                  );
+                },
               ),
             ),
-          );
-        },
-      ),
-    );
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                alignment: Alignment.center,
+                color: Theme.of(context).primaryColor,
+                padding: EdgeInsets.symmetric(horizontal: 10.0),
+                height: 50.0,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Total Items : ${productsList.length}'),
+                    Text('Grand Total: ${totalPrice}'),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ));
   }
 }

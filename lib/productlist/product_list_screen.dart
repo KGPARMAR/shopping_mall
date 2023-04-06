@@ -36,16 +36,15 @@ class _ProductListScreenState extends State<ProductListScreen> {
   ScrollController? controller;
   int page = 1;
 
-  Future<int> addPlanets(Data productsList) async {
+  Future<int> addProducts(Data productsList) async {
     return await handler.insertProducts([productsList]);
   }
 
   void _scrollListener() {
-    print(controller!.position.extentAfter);
-    if (controller!.position.extentAfter < 500) {
+    /*if (controller!.position.extentAfter < 500) {
       page++;
       widget.productBloc!..add(LoadProductEvent(page));
-    }
+    }*/
   }
 
   @override
@@ -82,9 +81,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
                   ),
                 );
               },
-              child: Icon(
-                Icons.work_outline_sharp,
-              ),
+              child: Icon(Icons.add_shopping_cart_outlined),
             )
           ],
         ),
@@ -131,6 +128,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
                               child: Container(
                                 height: 50.0,
                                 color: Colors.white,
+                                padding: EdgeInsets.symmetric(horizontal: 5.0),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
@@ -146,10 +144,13 @@ class _ProductListScreenState extends State<ProductListScreen> {
                                     ),
                                     GestureDetector(
                                       onTap: () {
-                                        var temp = addPlanets(productsList[index]);
-                                        print(temp);
+                                        addProducts(productsList[index]);
+                                        const snackBar = SnackBar(
+                                          content: Text('Item added successfully!'),
+                                        );
+                                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
                                       },
-                                      child: Icon(Icons.work_outline_sharp),
+                                      child: Icon(Icons.add_shopping_cart_outlined),
                                     )
                                   ],
                                 ),
